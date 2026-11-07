@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block titel %}Instellingen — Tennis Tossen{% endblock %}
+{% block inhoud %}
+<h1>Instellingen</h1>
+<form method="post" class="rij">
+  <label>Aantal rondes
+    <input type="number" name="aantal_rondes" min="1" max="30" value="{{ data['instellingen']['aantal_rondes'] }}" required>
+  </label>
+  <label>Banen per ronde
+    <input type="number" name="banen_per_ronde" min="1" max="20" value="{{ data['instellingen']['banen_per_ronde'] }}" required>
+  </label>
+  <button type="submit">Opslaan</button>
+</form>
+<p class="hint">Let op: verklein je het aantal rondes, dan blijven bestaande indelingen buiten dat bereik gewoon bestaan maar zijn niet meer zichtbaar.</p>
+{% endblock %}

@@ -1,0 +1,26 @@
+* { box-sizing: border-box; }
+body { font-family: system-ui, sans-serif; margin: 0; background: #f4f6f8; color: #1c2833; }
+nav { background: #1e5e28; padding: 0.6rem 1rem; display: flex; gap: 1rem; }
+nav a { color: #fff; text-decoration: none; font-weight: 600; }
+main { max-width: 960px; margin: 1.2rem auto; padding: 0 1rem; }
+h1, h2 { color: #1e5e28; }
+table { width: 100%; border-collapse: collapse; background: #fff; margin: 0.5rem 0 1.2rem; }
+th, td { border: 1px solid #cfd8dc; padding: 0.45rem 0.6rem; text-align: left; }
+thead th { background: #e8f2e9; }
+form.rij { display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; margin: 0.4rem 0; }
+input, select, button { padding: 0.4rem 0.6rem; border: 1px solid #90a4ae; border-radius: 4px; font: inherit; background: #fff; }
+button { background: #1e5e28; color: #fff; border-color: #1e5e28; cursor: pointer; }
+button:hover { background: #174a1f; }
+.knop { display: inline-block; padding: 0.35rem 0.7rem; background: #1e5e28; color: #fff; border-radius: 4px; text-decoration: none; }
+fieldset { border: 1px solid #cfd8dc; background: #fff; margin: 0.6rem 0; }
+legend { font-weight: 600; color: #1e5e28; }
+.flashes { max-width: 960px; margin: 0.8rem auto; padding: 0 1rem; }
+.flash { background: #fff8dc; border: 1px solid #e0c96b; padding: 0.5rem 0.8rem; border-radius: 4px; margin-bottom: 0.4rem; }
+.status.geblokkeerd { background: #fdecea; border: 1px solid #e57373; padding: 0.5rem 0.8rem; border-radius: 4px; }
+.actiebalk { display: flex; gap: 0.6rem; align-items: center; margin-bottom: 1rem; }
+.hint { color: #607d8b; font-size: 0.9rem; }
+.printtabel .scoreVak { min-width: 5rem; height: 2rem; }
+@media print {
+  body { background: #fff; }
+  .geen-print { display: none; }
+}

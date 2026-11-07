@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% block titel %}Tennis Tossen{% endblock %}</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+{% if request.path.endswith('/print') or request.endpoint == 'ronde_print' %}
+<style>
+@media print { .geen-print { display: none; } }
+</style>
+{% endif %}
+</head>
+<body>
+{% if request.endpoint != 'ronde_print' %}
+<nav class="geen-print">
+  <a href="{{ url_for('index') }}">Rondes</a>
+  <a href="{{ url_for('deelnemers') }}">Deelnemers</a>
+  <a href="{{ url_for('instellingen') }}">Instellingen</a>
+  <a href="{{ url_for('wachtwoord_instellen') }}">Wachtwoord</a>
+  {% if heeft_wachtwoord and ingelogd() %}
+  <a href="{{ url_for('uitloggen') }}">Uitloggen</a>
+  {% endif %}
+</nav>
+{% endif %}
+{% with berichten = get_flashed_messages() %}
+  {% if berichten %}
+    <div class="flashes geen-print">
+      {% for b in berichten %}<div class="flash">{{ b }}</div>{% endfor %}
+    </div>
+  {% endif %}
+{% endwith %}
+<main>
+{% block inhoud %}{% endblock %}
+</main>
+</body>
+</html>

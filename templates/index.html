@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block titel %}Rondes — Tennis Tossen{% endblock %}
+{% block inhoud %}
+<h1>Tennis Tossen</h1>
+<p>{{ data['deelnemers'] | length }} deelnemers · {{ data['instellingen']['aantal_rondes'] }} rondes · {{ data['instellingen']['banen_per_ronde'] }} banen per ronde</p>
+
+<table>
+  <thead>
+    <tr><th>Ronde</th><th>Status</th><th>Banen</th><th></th></tr>
+  </thead>
+  <tbody>
+  {% for r in ronde_info %}
+    <tr>
+      <td>Ronde {{ r.nr }}</td>
+      <td>{% if r.status == 'gespeeld' %}Geblokkeerd (gespeeld){% elif r.status == 'open' %}Ingedeeld{% else %}Nog niet ingedeeld{% endif %}</td>
+      <td>{{ r.aantal_wedstrijden }}</td>
+      <td><a class="knop" href="{{ url_for('ronde_detail', ronde_nr=r.nr) }}">Openen</a></td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

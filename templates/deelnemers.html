@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block titel %}Deelnemers — Tennis Tossen{% endblock %}
+{% block inhoud %}
+<h1>Deelnemers</h1>
+
+<h2>Toevoegen</h2>
+<form method="post" class="rij">
+  <input type="hidden" name="actie" value="toevoegen">
+  <input type="text" name="naam" placeholder="Naam" required>
+  <select name="geslacht" required>
+    <option value="M">Man</option>
+    <option value="V">Vrouw</option>
+  </select>
+  <select name="niveau" required>
+    <option value="1">Speelsterkte 1 (sterk)</option>
+    <option value="2">Speelsterkte 2</option>
+    <option value="3">Speelsterkte 3 (beginner)</option>
+  </select>
+  <button type="submit">Toevoegen</button>
+</form>
+
+<h2>Overzicht</h2>
+{% if data['deelnemers'] %}
+<table>
+  <thead>
+    <tr><th>Naam</th><th>Geslacht</th><th>Speelsterkte</th><th>Actief</th><th>Ingedeeld (×)</th><th></th></tr>
+  </thead>
+  <tbody>
+  {% for d in data['deelnemers'] %}
+    <tr>
+      <td>{{ d['naam'] }}</td>
+      <td>{{ 'Man' if d['geslacht'] == 'M' else 'Vrouw' }}</td>
+      <td>
+        <form method="post" class="rij">
+          <input type="hidden" name="actie" value="niveau">
+          <input type="hidden" name="id" value="{{ d['id'] }}">
+          <select name="niveau" onchange="this.form.submit()">
+            <option value="1" {% if d['niveau'] == 1 %}selected{% endif %}>1</option>
+            <option value="2" {% if d['niveau'] == 2 %}selected{% endif %}>2</option>
+            <option value="3" {% if d['niveau'] == 3 %}selected{% endif %}>3</option>
+          </select>
+        </form>
+      </td>
+      <td>
+        <form method="post" class="rij">
+          <input type="hidden" name="actie" value="toggle_actief">
+          <input type="hidden" name="id" value="{{ d['id'] }}">
+          <button type="submit">{{ 'Ja' if d['actief'] else 'Nee' }}</button>
+        </form>
+      </td>
+      <td>{{ telling.get(d['id'], 0) }}</td>
+      <td>
+        <form method="post" class="rij" onsubmit="return confirm('Deelnemer verwijderen?')">
+          <input type="hidden" name="actie" value="verwijder">
+          <input type="hidden" name="id" value="{{ d['id'] }}">
+          <button type="submit">Verwijder</button>
+        </form>
+      </td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<p>Nog geen deelnemers.</p>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block titel %}Wachtwoord — Tennis Tossen{% endblock %}
+{% block inhoud %}
+<h1>Wachtwoord</h1>
+{% if heeft_wachtwoord %}
+<p>Het wachtwoord is ingesteld. Alleen wie het wachtwoord kent, kan bij het toernooi.</p>
+<h2>Wachtwoord wijzigen</h2>
+<form method="post" class="rij">
+  <input type="hidden" name="actie" value="wijzigen">
+  <input type="password" name="huidig" placeholder="Huidig wachtwoord" required>
+  <input type="password" name="nieuw" placeholder="Nieuw wachtwoord" minlength="4" required>
+  <button type="submit">Wijzigen</button>
+</form>
+{% else %}
+<p>Nog geen wachtwoord ingesteld. Stel er een in zodat niet iedereen met de URL bij jouw toernooi kan.</p>
+<h2>Wachtwoord instellen</h2>
+<form method="post" class="rij">
+  <input type="hidden" name="actie" value="instellen">
+  <input type="password" name="nieuw" placeholder="Nieuw wachtwoord" minlength="4" required>
+  <button type="submit">Instellen</button>
+</form>
+{% endif %}
+{% endblock %}

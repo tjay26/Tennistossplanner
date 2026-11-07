@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+{% block titel %}Ronde {{ ronde_nr }} — Tennis Tossen{% endblock %}
+{% block inhoud %}
+<h1>Ronde {{ ronde_nr }}</h1>
+{% set geblokkeerd = ronde and ronde['status'] == 'gespeeld' %}
+
+{% if ronde %}
+  {% if geblokkeerd %}<p class="status geblokkeerd">Deze ronde is geblokkeerd (gespeeld).</p>{% endif %}
+
+  <h2>Wedstrijden</h2>
+  <table>
+    <thead>
+      <tr><th>Baan</th><th>Team 1</th><th>Team 2</th><th>Score</th></tr>
+    </thead>
+    <tbody>
+    {% for w in ronde['wedstrijden'] %}
+      <tr>
+        <td>{{ w['baan'] }}</td>
+        <td>{{ namen(data, w['team1']) | join(' / ') }}</td>
+        <td>{{ namen(data, w['team2']) | join(' / ') }}</td>
+        <td>
+          {% if w['score'][0] is not none %}{{ w['score'][0] }}–{{ w['score'][1] }}{% else %}—{% endif %}
+        </td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+
+  <div class="actiebalk">
+    <a class="knop" href="{{ url_for('ronde_print', ronde_nr=ronde_nr) }}">Afdrukken</a>
+    <form method="post" action="{{ url_for('ronde_blokkeer', ronde_nr=ronde_nr) }}">
+      <button type="submit">{% if geblokkeerd %}Deblokkeer{% else %}Blokkeer (ronde gespeeld){% endif %}</button>
+    </form>
+    {% if not geblokkeerd %}
+    <form method="post" action="{{ url_for('ronde_wis', ronde_nr=ronde_nr) }}" onsubmit="return confirm('Indeling wissen?')">
+      <button type="submit">Wis indeling</button>
+    </form>
+    {% endif %}
+  </div>
+
+  {% if not geblokkeerd %}
+  <h2>Stand invoeren</h2>
+  <form method="post" action="{{ url_for('ronde_score', ronde_nr=ronde_nr) }}">
+    {% for w in ronde['wedstrijden'] %}
+    <fieldset>
+      <legend>Baan {{ w['baan'] }}: {{ namen(data, w['team1']) | join(' / ') }} vs {{ namen(data, w['team2']) | join(' / ') }}</legend>
+      <label>{{ namen(data, w['team1']) | join(' / ') }}
+        <input type="number" name="score_{{ w['baan'] }}_1" min="0" max="7" value="{{ w['score'][0] if w['score'][0] is not none else '' }}">
+      </label>
+      <label>{{ namen(data, w['team2']) | join(' / ') }}
+        <input type="number" name="score_{{ w['baan'] }}_2" min="0" max="7" value="{{ w['score'][1] if w['score'][1] is not none else '' }}">
+      </label>
+    </fieldset>
+    {% endfor %}
+    <button type="submit">Stand opslaan</button>
+  </form>
+
+  <h2>Handmatig aanpassen</h2>
+  <form method="post" action="{{ url_for('ronde_handmatig', ronde_nr=ronde_nr) }}">
+    {% for w in ronde['wedstrijden'] %}
+    {% set wi = loop.index0 %}
+    <fieldset>
+      <legend>Baan {{ w['baan'] }}</legend>
+      {% for kant in ['team1', 'team2'] %}
+      <div class="rij">
+        {% for plek in [0, 1] %}
+        <select name="w{{ wi }}_{{ kant }}_speler{{ plek + 1 }}" required>
+          <option value="">— kies speler —</option>
+          {% for d in data['deelnemers'] %}
+          <option value="{{ d['id'] }}" {% if w[kant][plek] == d['id'] %}selected{% endif %}>
+            {{ d['naam'] }} ({{ 'M' if d['geslacht'] == 'M' else 'V' }}, sterkte {{ d['niveau'] }})
+          </option>
+          {% endfor %}
+        </select>
+        {% endfor %}
+      </div>
+      {% endfor %}
+    </fieldset>
+    {% endfor %}
+    <button type="submit">Aanpassingen opslaan</button>
+  </form>
+  {% endif %}
+{% else %}
+  <p>Deze ronde is nog niet ingedeeld.</p>
+  <form method="post" action="{{ url_for('ronde_indelen', ronde_nr=ronde_nr) }}">
+    <button type="submit">Automatisch indelen</button>
+  </form>
+{% endif %}
+
+{% if ronde and not geblokkeerd %}
+  <h2>Opnieuw indelen</h2>
+  <form method="post" action="{{ url_for('ronde_indelen', ronde_nr=ronde_nr) }}" onsubmit="return confirm('Opnieuw indelen? Huidige indeling en scores van deze ronde worden vervangen.')">
+    <button type="submit">Automatisch opnieuw indelen</button>
+  </form>
+{% endif %}
+{% endblock %}

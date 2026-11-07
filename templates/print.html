@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block titel %}Ronde {{ ronde_nr }} afdrukken — Tennis Tossen{% endblock %}
+{% block inhoud %}
+<h1>Speelschema ronde {{ ronde_nr }}</h1>
+<table class="printtabel">
+  <thead>
+    <tr><th>Baan</th><th>Team 1</th><th>Team 2</th><th>Score team 1</th><th>Score team 2</th></tr>
+  </thead>
+  <tbody>
+  {% for w in ronde['wedstrijden'] %}
+    <tr>
+      <td>{{ w['baan'] }}</td>
+      <td>{{ namen(data, w['team1']) | join(' / ') }}</td>
+      <td>{{ namen(data, w['team2']) | join(' / ') }}</td>
+      <td class="scoreVak">{{ w['score'][0] if w['score'][0] is not none else '' }}</td>
+      <td class="scoreVak">{{ w['score'][1] if w['score'][1] is not none else '' }}</td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+<p class="geen-print"><a href="#" onclick="window.print(); return false;">Afdrukken</a> · <a href="{{ url_for('ronde_detail', ronde_nr=ronde_nr) }}">Terug</a></p>
+{% endblock %}
